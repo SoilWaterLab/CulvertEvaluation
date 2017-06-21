@@ -106,16 +106,16 @@ def calculate(sorted_filename, watershed_precip_input_filename, rainfall_adjustm
             skipped_watersheds.append({'watershed': watershed, 'reason': 'Area_sqkm < 0.01'})
             continue 
             
-        # calculate storage, S in cm
-        Storage = 0.1 * ((25400.0 / CN) - 254.0)
-        Ia = 0.2 * Storage #inital abstraction, amount of precip that never has a chance to become runoff
+        # calculate storage, S  and Ia in cm
+        Storage = 0.1 * ((25400.0 / CN) - 254.0) #cm
+        Ia = 0.2 * Storage #inital abstraction, amount of precip that never has a chance to become runoff (cm)
     
         # calculate depth of runoff from each storm
         # if P < Ia NO runoff is produced
         # Note that P is a vector of the 9 values, so everything hereafter is too.
-        Pe = (P - Ia)
+        Pe = (P - Ia) #cm
         Pe = numpy.array([0 if i < 0 else i for i in Pe]) # get rid of negative Pe's
-        Q = (Pe ** 2) / (P + (Storage - Ia))
+        Q = (Pe ** 2) / (P + (Storage - Ia)) #cm
 
         
         #calculate q_peak, cubic meters per second
@@ -132,7 +132,8 @@ def calculate(sorted_filename, watershed_precip_input_filename, rainfall_adjustm
         Const2 = (rain_ratio ** 2) *  0.6041 + (rain_ratio * 0.0437) - 0.1761
 
         qu = 10 ** (Const0 + Const1 * numpy.log10(tc) + Const2 * (numpy.log10(tc)) ** 2 - 2.366)
-        q_peak = Q * qu * ws_area #qu has weird units which take care of the difference between Q in cm and area in km2
+        q_peak = Q * qu * ws_area #m^3/s
+        #qu has weird units which take care of the difference between Q in cm and area in km2
 
         # Convert our vector back to a list and add the other info to the front.
         result = [BarrierID, ws_area, tc, CN] + q_peak.tolist()
