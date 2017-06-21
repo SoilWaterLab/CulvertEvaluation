@@ -10,7 +10,7 @@
 #
 # Based off of the runoff model created by Rebecca Marjerson in 2013
 #
-# Determine the runoff peak flow using the SCS curve number method
+# Determine the runoff peak flow using the SCS curve number method (see TR-55 document for further details)
 # 
 # Inputs:   culvert_Q_input.csv: culvertID, watershed area (sq km), average curve number, time of concentration (hr)
 #           ws_precip: csv file exported from the Cornell NRCC of 24 hour storms with return periods 1 to 500 years
@@ -126,12 +126,13 @@ def calculate(sorted_filename, watershed_precip_input_filename, rainfall_adjustm
         rain_ratio = Ia / P
         rain_ratio = numpy.array([.1 if i < .1 else .5 if i > .5 else i for i in rain_ratio])
         # keep rain ratio within limits set by TR55
-    
+        #Calculated
         Const0 = (rain_ratio ** 2) * -2.2349 + (rain_ratio * 0.4759) + 2.5273
         Const1 = (rain_ratio ** 2) *  1.5555 - (rain_ratio * 0.7081) - 0.5584
         Const2 = (rain_ratio ** 2) *  0.6041 + (rain_ratio * 0.0437) - 0.1761
 
         qu = 10 ** (Const0 + Const1 * numpy.log10(tc) + Const2 * (numpy.log10(tc)) ** 2 - 2.366)
+        # qu would have to be m^3/s per km^2 per cm
         q_peak = Q * qu * ws_area #m^3/s
         #qu has weird units which take care of the difference between Q in cm and area in km2
 
