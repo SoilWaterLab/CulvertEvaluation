@@ -21,6 +21,7 @@ import numpy, os, re, csv, loader
 
 def inlet_control(culvert_geometry_filename, output_filename):
 
+
     #csv_writer.writerow(['BarrierID', 'NAACC_ID', 'Lat', 'Long', 'HW_m', 'xArea_sqm', 'length_m', 'D_m', 'c', 'Y', 'ks', 'Culvert_Sl', 'Comments', 'Flags'])
 
     # Signature for incoming geometry file.
@@ -69,7 +70,8 @@ def inlet_control(culvert_geometry_filename, output_filename):
         Ku = 1.811 # adjustment factor for units (SI=1.811)
               
         # Calculate capacity for the culvert and store with the rest of the data for that culvert.
-        culvert['Qc'] = (Culvert_Area * numpy.sqrt(D * ((HW / D) - Y - Ks * S) / c)) / Ku #Culvert capacity submerged outlet, inlet control
+        culvert['Qc'] = (Culvert_Area * numpy.sqrt(D * ((HW / D) - Y - Ks * S) / c)) / Ku 
+        #Culvert capacity submerged outlet, inlet control (m^3/s)?
 
     # Now produce output data using this.
     output_data = []
