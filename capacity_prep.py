@@ -8,6 +8,7 @@
 # Last updated by Lisa Watkins 9/15/2016
 #
 # Updated by Tanvi Naidu 6/14/2017
+# Fixed local variable errors 6/21/2017 Zoya
 #
 # This script will take the raw culvert data from the field and
 # calculate the area of each culvert based on the shape.
@@ -110,11 +111,16 @@ def geometry(field_data_input_filename, output_filename):
             ks=0.7
         else:
             ks=-0.5
+        
+        c=0.99 #Filler value to define c and y before declared global variables (and identify culverts not covered by inlet type and material combinations)
+        Y=0.99 #Filler value to define c and y before declared global variables (and identify culverts not covered by inlet type and material combinations)
 
         # assign c and y values (coefficients based on shape and material from FHWA engineering pub HIF12026, appendix A)               
         if Culvert_shape=='Arch':
             if Culvert_material=="Concrete" or Culvert_material=="Stone":
                 if Inlet_type=="Headwall" or Inlet_type=="Projecting":
+                    global c #Renders c and y global variables so that they can be accessed outside of their indent levels (i.e. in Ln 199)
+                    global Y #Renders c and y global variables so that they can be accessed outside of their indent levels (i.e. in Ln 199)
                     c=0.041
                     Y=0.570
                 elif Inlet_type=='Mitered to Slope':
