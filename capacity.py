@@ -90,7 +90,7 @@ def inlet_control(culvert_geometry_filename, output_filename):
         # If there is just a single culvert (Flags = 0), this simply gets the Qc value for that culvert.
         Qf = 0
         for offset in range (0, num_culverts_here):
-            Qf += valid_rows[cur_culvert_index + offset]['Qc'] #This only works if the flagged culverts are appropriately grouped together in the culv_geom.csv (i.e. the second and third culvert at a crossing appear in the two rows below the first culvert. Data often, but not always, is pre-packaged this way. Culverts at the same crossing share the same SurveyIDs, but have different (and not alwyas adjacent) NAACC_IDs. To fix this, we'll need to bring the SurveyID all the way to the culv_geom.csv, then do an array sort by Survey_ID right before this step.  
+            Qf += valid_rows[cur_culvert_index + offset]['Qc'] #This only works if the flagged culverts are appropriately grouped together in the culv_geom.csv (i.e. the second and third culvert at a crossing appear in the two rows below the first culvert. Data often, but not always, is pre-packaged this way. Culverts at the same crossing usually share the same SurveyIDs, but have different (and not alwyas adjacent) NAACC_IDs. To fix this, we'll first have to do an array sort by both lat and long, and then fill in flags where culvert collectors left them out. We should also address this data collection issue with Andrew.  
         cur_culvert_index += num_culverts_here
 
         # Compose the output data list.
