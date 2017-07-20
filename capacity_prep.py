@@ -9,6 +9,7 @@
 #
 # Updated by Tanvi Naidu 6/14/2017
 # Fixed local variable errors 6/21/2017 Zoya
+# Updated by Sharon Zhang 7/20/2017 
 #
 # This script will take the raw culvert data from the field and
 # calculate the area of each culvert based on the shape.
@@ -84,6 +85,8 @@ def geometry(field_data_input_filename, output_filename):
 
         Inlet_type = barrier['In_Type']
         Culvert_material = barrier['Culv_Mat']
+        if "Stone" in Culvert_material: # if the word stone exists in the column it is assigned stone 
+            Culvert_material = "Stone" #Sharon 7/11/17
         Flags = barrier['Flags']
         HW = barrier['HW']
         #Tanvi Naidu (6/16/2017): Changed from 'Out_A' to 'HW'
@@ -111,7 +114,10 @@ def geometry(field_data_input_filename, output_filename):
             ks=0.7
         else:
             ks=-0.5
-        
+
+        global c #Renders c and y global variables so that they can be accessed outside of their indent levels (i.e. in Ln 199)
+        global Y #Renders c and y global variables so that they can be accessed outside of their indent levels (i.e. in Ln 199)
+
         c=0.99 #Filler value to define c and y before declared global variables (and identify culverts not covered by inlet type and material combinations)
         Y=0.99 #Filler value to define c and y before declared global variables (and identify culverts not covered by inlet type and material combinations)
 
@@ -119,8 +125,6 @@ def geometry(field_data_input_filename, output_filename):
         if Culvert_shape=='Arch':
             if Culvert_material=="Concrete" or Culvert_material=="Stone":
                 if Inlet_type=="Headwall" or Inlet_type=="Projecting":
-                    global c #Renders c and y global variables so that they can be accessed outside of their indent levels (i.e. in Ln 199)
-                    global Y #Renders c and y global variables so that they can be accessed outside of their indent levels (i.e. in Ln 199)
                     c=0.041
                     Y=0.570
                 elif Inlet_type=='Mitered to Slope':
@@ -132,8 +136,7 @@ def geometry(field_data_input_filename, output_filename):
                 elif Inlet_type=='Wingwall and Headwall':
                      c=0.040
                      Y=0.620
-        
-            elif Inlet_type=="Plastic" or Culvert_material=="Metal":
+            elif Culvert_material=="Plastic" or Culvert_material=="Metal":  #inlet_type to Culvert_material for plastic - sharon 
                  if Inlet_type=="Headwall":
                     c=0.043
                     Y=0.610
@@ -146,6 +149,11 @@ def geometry(field_data_input_filename, output_filename):
                  elif Inlet_type == 'Headwall' or Inlet_type == 'Wingwall and Headwall' or Inlet_type=='Wingwall':
                      c=0.043
                      Y=0.610
+            elif Culvert_material=="Combination":
+                     c=1.0   #filler values -sharon
+                     Y=1.0    # filler values - sharon
+
+
 
         elif Culvert_shape=="Box":
             if Culvert_material=="Concrete" or Culvert_material=="Stone":
@@ -154,23 +162,32 @@ def geometry(field_data_input_filename, output_filename):
             elif Culvert_material=="Plastic" or Culvert_material=='Metal':
                 if Inlet_type=='Headwall':
                     c=0.038
-                    Y=0.690
+                    Y=0.690 #put in else statement in case other inlet types exist-Sharon
+                else:
+                    c=1.0
+                    Y=1.0 #filler numbers -Sharon
             elif Culvert_material=='Wood':
                 c=0.038
                 Y=0.87
+            elif Culvert_material== "Combination":
+                c=1.0
+                Y=1.0   #filler values -Sharon
 
         elif Culvert_shape=="Elliptical" or Culvert_shape== 'Pipe Arch':
             if Culvert_material=="Concrete" or Culvert_material=="Stone":
                 c=0.048
                 Y=0.80
             elif Culvert_material=="Plastic" or Culvert_material=='Metal':
-
                 if Inlet_type== 'Projecting':
                     c=0.060
                     Y=0.75
                 else:
                     c=0.048
                     Y=0.80
+
+            elif Culvert_material =="Combination":
+                  c=1.0
+                  Y=1.0  #filler -Sharon
         
         elif Culvert_shape=="Round":
             if Culvert_material=="Concrete" or Culvert_material=="Stone":
@@ -189,7 +206,14 @@ def geometry(field_data_input_filename, output_filename):
                     Y=0.75
                 else:
                     c=0.038
-                    Y=0.69 
+                    Y=0.69
+            elif Culvert_material == "Combination":
+                c=1.0
+                Y=1.0 #filler-Sharon
+
+
+        #all filler values i.e. 1.0 need to be replaced with real values when they can be found. things that cannot be modelled include
+        #all combination culvert material types and Box/Plastic or Metal/any other type of Inlet thats not Headwall  - Sharon
 
         # Add current output row to output_data
         output_data.append([BarrierID, NAACC_ID, Lat, Long, H, xArea_sqm, length, D, c, Y, ks, Culvert_Sl, comments, Flags])
