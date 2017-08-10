@@ -43,8 +43,9 @@ def sort(watershed_data_input_filename, county_abbreviation, output_filename):
             + " valid rows."
 
     # Strip 'their' county abbreviation off the BarrierID string and cast to int, e.g., '10cmbws' -> 10
-    id_suffix_len = 3 #Abbreviations are usually 3-letter acronyms plus 'ws'.
+    id_suffix_len = 5 #Abbreviations are usually 3-letter acronyms plus 'ws'.
     #suffis length changed from 5 to 3 by Tanvi, 6/16
+    #changed back to 5 by Allison 8/10/17, due to 3 throwing an error (the acronyms still appear to be a three letter abbreviation plus ws, so 5 char total)
     for watershed in valid_watersheds:
         barrier_id = watershed['BarrierID']
         watershed['BarrierID'] = int(barrier_id[:len(barrier_id) - id_suffix_len])
