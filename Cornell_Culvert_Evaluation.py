@@ -1,14 +1,13 @@
 # Culvert Evaluation Model
 # David Gold
 # August 4, 2015
+# These scripts are based on the culvert evaluation model developed by Rebecca Marjerison in 2013
 #
+# Object-oriented structure and resiliency updates built by Noah Warnke August 31 2016 (no formulas changed).
 #
-# Updated by Noah Warnke
-# August 31 2016 (no formulas changed).
+# Updated by Zoya Kaufmann June 2016 - August 2017
 #
-# Updated by Tanvi Naidu June 19 2017
-#
-# This script is based on the culvert evaluation model developed by Rebecca Marjerison in 2013
+# Merged with older versions by Tanvi Naidu June 19 2017
 #
 # This script will:
 # 1. Determine the runoff peak discharge of given culvert's watershed using the SCS graphical curve number method.
@@ -57,6 +56,7 @@ import numpy, os, re, csv, runoff, capacity_prep, capacity, return_periods, time
 
 # Propmts user to input county file name, and corrects to proper '.csv' format
 data_path = raw_input('Enter path to Data folder, for example: C:\Users\Tanvi\Desktop\Cornell_CulvertModel_StartKit_Nov2016\All_Scripts\: ')
+#TO DO: return data path to Noah's original (data folder Scripts folder/county abbreviation folder/data folder)
 counties_filename = raw_input('Enter name of counties csv file in the Data folder: ')
 counties_filename = data_path + counties_filename
 if counties_filename[len(counties_filename) - 4:] != '.csv':
