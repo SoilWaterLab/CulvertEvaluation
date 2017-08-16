@@ -176,6 +176,8 @@ with open(raw_data, 'r') as f:
                 
             if CD[11]!="Bridge" and N==0:
                 # Bridge crossings are not modeled
+                # From Allison, 8/16/17: I've noticed this doesn't always capture all Bridges.  Also, there are other types of crossings
+                # we do not model that are missed by this (e.g., ford, buried stream)
                 writer.writerow([BarrierID, NAACC_ID, Lat, Long, Road_Name, Culv_material, Inlet_type, Inlet_Shape, Inlet_A, Inlet_B, HW, Slope,Length, Outlet_shape, Outlet_A, Outlet_A, Comments, Flags])
                 k=k+1
             elif CD[44]=="Box/Bridge with Abutments" and Inlet_A<20 and N==0:
