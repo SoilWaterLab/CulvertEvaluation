@@ -134,8 +134,8 @@ with open(raw_data, 'r') as f:
             elif Inlet_Shape=='Open Bottom Arch Bridge/Culvert':
                 Inlet_Shape='Arch'
             
-            Inlet_A=float(CD[47])
-            Inlet_B=float(CD[43])
+            Inlet_A=float(CD[47]) # Inlet_A = Inlet_Width
+            Inlet_B=float(CD[43]) # Inlet B = Inlet Height
             HW=float(CD[27]) #This is from the top of the culvert, make sure the next step adds the culvert height
             Slope=float(CD[61]) 
             if Slope<0: # Negatives slopes are assumed to be zero
@@ -168,7 +168,7 @@ with open(raw_data, 'r') as f:
             else:
                 Flags=0
 
-            Neg_test=[Inlet_A,Inlet_B,HW,Length]
+            Neg_test=[Inlet_A,Inlet_B,HW,Length] # This step eliminates rows with negative values of Inlet_A, Inlet_B, HW, or Length from the analysis
             N=0
             for i in range(0,4):
                 if Neg_test[i]<0:
