@@ -109,7 +109,7 @@ with open(raw_data, 'r') as f:
             NAACC_ID=CD[35]
             Lat=float(CD[20])
             Long=float(CD[19])
-            Road_Name=CD[26]
+            Road_Name=CD[26] # Allison, 9/25 - Not sure what this variable is for.  It seems to be capturing the "GIS_Longitude"
             Culv_material=CD[49]
             
             # Assign inlet type and then convert to language accepted by capacity_prep script
