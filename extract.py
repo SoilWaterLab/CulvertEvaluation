@@ -98,7 +98,7 @@ with open(raw_data, 'r') as f:
         for row in input_table: #each culvert
 
             # eliminate blank cells from data and add data to array
-            for i in range(0,67): 
+            for i in range(0,62): 
                 cell_value=row[i]
                 if cell_value=='':
                     cell_value=-1
@@ -109,7 +109,7 @@ with open(raw_data, 'r') as f:
             NAACC_ID=CD[35]
             Lat=float(CD[20])
             Long=float(CD[19])
-            Road_Name=CD[26] # Allison, 9/25 - Not sure what this variable is for.  It seems to be capturing the "GIS_Longitude"
+            Road_Name=CD[26]
             Culv_material=CD[49]
             
             # Assign inlet type and then convert to language accepted by capacity_prep script
