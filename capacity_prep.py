@@ -121,7 +121,8 @@ def geometry(field_data_input_filename, output_filename):
         c=0.99 #Filler value to define c and y before declared global variables (and identify culverts not covered by inlet type and material combinations)
         Y=0.99 #Filler value to define c and y before declared global variables (and identify culverts not covered by inlet type and material combinations)
 
-        # assign c and y values (coefficients based on shape and material from FHWA engineering pub HIF12026, appendix A)               
+        # assign c and y values (coefficients based on shape and material from FHWA engineering pub HIF12026, appendix A)
+        # no c and y value provide for inlet_type == "other".  Will take on the filler value, 0.99
         if Culvert_shape=='Arch':
             if Culvert_material=="Concrete" or Culvert_material=="Stone":
                 if Inlet_type=="Headwall" or Inlet_type=="Projecting":
