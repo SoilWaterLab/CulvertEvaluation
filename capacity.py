@@ -5,9 +5,8 @@
 # Updated by David Gold
 # July 8 2015
 #
-# Object-oriented structure and resiliency updates built by Noah Warnke August 31 2016 (no formulas changed).
-#
-# Updated by Zoya Kaufmann June 2016 - August 2017
+# Updated by Noah Warnke
+# August 31 2016 (no formulas changed).
 #
 # Some comments added by Tanvi Naidu June 13 2016
 #
@@ -23,9 +22,8 @@ import numpy, os, re, csv, loader
 def inlet_control(culvert_geometry_filename, output_filename):
 
 
-    #csv_writer.writerow(['BarrierID', 'NAACC_ID', 'Lat', 'Long', 'HW_m', 'xArea_sqm', 'length_m', 'D_m', 'c', 'Y', 'ks', 'Culvert_Sl', 'County', 'Flags'])
-    #Changed Comment field to County throughout scripts 8.14.17
-    
+    #csv_writer.writerow(['BarrierID', 'NAACC_ID', 'Lat', 'Long', 'HW_m', 'xArea_sqm', 'length_m', 'D_m', 'c', 'Y', 'ks', 'Culvert_Sl', 'Comments', 'Flags'])
+
     # Signature for incoming geometry file.
     # This creates a list of dictionaries that stores the relevant headers of
     # the input file and the type of data in the column under that header
@@ -45,7 +43,7 @@ def inlet_control(culvert_geometry_filename, output_filename):
         {'name': 'Y', 'type': float},
         {'name': 'ks', 'type': float},
         {'name': 'Culvert_Sl', 'type': float},
-        {'name': 'County', 'type': str},
+        {'name': 'Comments', 'type': str},
         {'name': 'Flags', 'type': int}
     ]
 
@@ -92,19 +90,19 @@ def inlet_control(culvert_geometry_filename, output_filename):
         # If there is just a single culvert (Flags = 0), this simply gets the Qc value for that culvert.
         Qf = 0
         for offset in range (0, num_culverts_here):
-            Qf += valid_rows[cur_culvert_index + offset]['Qc'] #This only works if the flagged culverts are appropriately grouped together in the culv_geom.csv (i.e. the second and third culvert at a crossing appear in the two rows below the first culvert. Data often, but not always, is pre-packaged this way. Culverts at the same crossing usually share the same SurveyIDs, but have different (and not alwyas adjacent) NAACC_IDs. To automate this, we'll first have to add in an array sort by both lat and long, and then move culverts with number of culverts (or flags) greater 1 not grouped in a number of culverts equal to their number. However, culvert number reported will still require manual inspection. We should also address this data collection issue with Andrew.  
+            Qf += valid_rows[cur_culvert_index + offset]['Qc'] #This only works if the flagged culverts are appropriately grouped together in the culv_geom.csv (i.e. the second and third culvert at a crossing appear in the two rows below the first culvert. Data often, but not always, is pre-packaged this way. Culverts at the same crossing usually share the same SurveyIDs, but have different (and not alwyas adjacent) NAACC_IDs. To fix this, we'll first have to do an array sort by both lat and long, and then fill in flags where culvert collectors left them out. We should also address this data collection issue with Andrew.  
         cur_culvert_index += num_culverts_here
 
         # Compose the output data list.
         # Qf is culvert capacity under inlet control
-        output_data.append([culvert['BarrierID'], culvert['NAACC_ID'], culvert['Lat'], culvert['Long'], Qf, culvert['Flags'], culvert['County'], culvert['xArea_sqm']])
+        output_data.append([culvert['BarrierID'], culvert['NAACC_ID'], culvert['Lat'], culvert['Long'], Qf, culvert['Flags'], culvert['Comments'], culvert['xArea_sqm']])
 
     # Finally, save output data.
     with open(output_filename, 'wb') as output_file:
         csv_writer = csv.writer(output_file)
 
         # Header
-        csv_writer.writerow(['BarrierID','NAACC_ID','Lat','Long','Q','Flags','County','Culvert_Area']) 
+        csv_writer.writerow(['BarrierID','NAACC_ID','Lat','Long','Q','Flags','Comments','Culvert_Area']) 
 
         # Each row.
         for result in output_data:
